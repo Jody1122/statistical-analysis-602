@@ -21,3 +21,7 @@ $$
 $$
 SD(X)=\sigma_X=0.75998\approx0.76
 $$
+
+Billy claims that in a year (52 weeks), on average, he manages to have at least one matching number on his
+6-49 ticket. What do you think about Billy’s claim? Provide a brief commentary about Billy’s claim using your
+current knowledge of statistics and probability theory.
