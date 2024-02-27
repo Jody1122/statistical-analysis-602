@@ -57,3 +57,38 @@ print("c. To compute a 95% confidence interval (CI) for the mean LC50 measuremen
 print("d. while the provided confidence intervals are the same for both techniques in this specific case, it does not guarantee that the data follows a normal distribution.
     it's essential to consider factors like outliers which can distort the shape of data distribution")
 
+# Q3
+
+HS = do(1000)*mean(resample(c(rep(1,348),rep(0,322)),670));
+quantile(HS$mean,0.025);
+quantile(HS$mean,0.975);
+ggplot(data = HS, aes(x=HS$mean)) + geom_histogram(color = "orange", fill = "green") + 
+  xlab("Values of Bootstrap proportion_HS") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistic_HS: Sample proportion") + 
+  geom_vline(xintercept = quantile(HS$mean, 0.025), color="red") + geom_vline(xintercept = quantile(HS$mean, 0.975), color="red")
+
+
+UN = do(1000)*mean(resample(c(rep(1,274),rep(0,102)),376));
+quantile(UN$mean,0.025);
+quantile(UN$mean,0.975);
+ggplot(data = UN, aes(x=UN$mean)) + geom_histogram(color = "orange", fill = "blue") + 
+  xlab("Values of Bootstrap proportion_UN") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistic_UN: Sample proportion") + 
+  geom_vline(xintercept = quantile(UN$mean, 0.025), color="red") + geom_vline(xintercept = quantile(UN$mean, 0.975), color="red") 
+
+
+HS01 = c(rep(1,348),rep(0,322))
+UN01 = c(rep(1,274),rep(0,102))
+library(mosaic)
+#re-sampling with replacement
+prop_HS01 = do(1000)*mean(resample(HS01, replace = TRUE))
+prop_UN01 = do(1000)*mean(resample(UN01, replace = TRUE))
+#distribution of the difference between two proportions
+prop_diff = prop_UN01 - prop_HS01
+
+#visualizing the distribution
+ggplot(prop_diff,aes(x=mean)) + geom_histogram(col='black',fill = "red")+
+  xlab("phat_UN - phat_HS") + ylab("frequency") +
+  ggtitle("Bootstrap Distribution of difference between two proportions") +
+  geom_vline(xintercept = quantile(prop_diff$mean, 0.025), color="blue") + geom_vline(xintercept = quantile(prop_diff$mean, 0.975), color="blue") 
+quantile(prop_diff$mean,c(0.025,0.975))
+print('\n')
+print("The 95% confidence intervals is to the right of 0, with the center of distribution is around 0.2. This would be suggested that in most boostrap samples, phat_UN is greater than phat_HS based on this histogram with the bootstrap technique involved")
