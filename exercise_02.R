@@ -92,3 +92,32 @@ ggplot(prop_diff,aes(x=mean)) + geom_histogram(col='black',fill = "red")+
 quantile(prop_diff$mean,c(0.025,0.975))
 print('\n')
 print("The 95% confidence intervals is to the right of 0, with the center of distribution is around 0.2. This would be suggested that in most boostrap samples, phat_UN is greater than phat_HS based on this histogram with the bootstrap technique involved")
+
+# Q4
+# a. compute 95% CI of p_inflation
+n = 1000
+X_inflation = 163
+qnorm = qnorm(0.975)
+phat_inflation = (X_inflation+2)/(n+4)
+cat("phat_inflation :", sprintf("%.4f",phat_inflation))
+moe2 = qnorm(0.975)*sqrt(phat_inflation*(1 - phat_inflation)/(n + 4))
+ULpara = phat_inflation + moe2
+LLpara = phat_inflation - moe2
+cat('\n')
+cat("a. Parametric approach_95% CI for proportion of all Canadians aged 18 years or older whom Inflation is the most important national concern is", "(",sprintf("%.4f", LLpara),",", sprintf("%.4f", ULpara),")")
+
+# b. compute 95% CI of pboot_inflation
+library(mosaic)
+INF = do(1000)*mean(resample(c(rep(1,163),rep(0,1000-163)),1000))
+LLboot = quantile(INF$mean, 0.025)
+ULboot = quantile(INF$mean, 0.975)
+cat('\n')
+cat("b. Bootstrap approach_95% CI for proportion of all Canadians aged 18 years or older whom Inflation is the most important national concern is", "(",sprintf("%.4f", LLboot),",", sprintf("%.4f", ULboot),")")
+ggplot(data = INF, aes(x=INF$mean)) + geom_histogram(color = "orange", fill = "blue") + 
+  xlab("Values of Bootstrap proportion_Inflation Concern") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistic_Inflation Concern: Sample proportion") + 
+  geom_vline(xintercept = quantile(INF$mean, 0.025), color="red") + geom_vline(xintercept = quantile(INF$mean, 0.975), color="red") 
+
+#c. pInflation,Aug_23=0.13
+cat('\n')
+cat("c. pInflation,Aug_23=0.13, Since the entire 95% confidence interval of p_inflation from the recent survey is above the earlier proportion of 0.13, indicating that even the lower bound of our current estimate exceeds the previous value.
+We can infer that there is a statistically significant increase in the proportion of Canadians who believe Inflation is the most important national issue since August.") 
