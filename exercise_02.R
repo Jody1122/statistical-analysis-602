@@ -117,7 +117,36 @@ ggplot(data = INF, aes(x=INF$mean)) + geom_histogram(color = "orange", fill = "b
   xlab("Values of Bootstrap proportion_Inflation Concern") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistic_Inflation Concern: Sample proportion") + 
   geom_vline(xintercept = quantile(INF$mean, 0.025), color="red") + geom_vline(xintercept = quantile(INF$mean, 0.975), color="red") 
 
+
+
 #c. pInflation,Aug_23=0.13
 cat('\n')
 cat("c. pInflation,Aug_23=0.13, Since the entire 95% confidence interval of p_inflation from the recent survey is above the earlier proportion of 0.13, indicating that even the lower bound of our current estimate exceeds the previous value.
 We can infer that there is a statistically significant increase in the proportion of Canadians who believe Inflation is the most important national issue since August.") 
+
+# Q5
+
+# a. compute 95% CI of p_con
+n = 399
+X_con = 128
+qnorm = qnorm(0.975)
+phat_con = (X_con+2)/(n+4)
+cat("phat_inflation :", sprintf("%.4f",phat_con))
+moe2 = qnorm(0.975)*sqrt(phat_con*(1 - phat_con)/(n + 4))
+ULpara = phat_con + moe2
+LLpara = phat_con - moe2
+cat('\n')
+cat("a. Parametric approach_95% CI for proportion of all gen Z-ers in Canada that will vote for Conservative", "(",sprintf("%.4f", LLpara),",", sprintf("%.4f", ULpara),")")
+
+CON = do(1000)*mean(resample(c(rep(1,128+2),rep(0,399+4-128-2)),1000))
+LLboot = quantile(CON$mean, 0.025)
+ULboot = quantile(CON$mean, 0.975)
+cat('\n')
+cat("a. Bootstrap approach non adjusted_95% CI for proportion of all gen Z-ers in Canada that will vote for Conservative", "(",sprintf("%.4f", LLboot),",", sprintf("%.4f", ULboot),")")
+ggplot(data = CON, aes(x=CON$mean)) + geom_histogram(color = "orange", fill = "grey") + 
+  xlab("Values of Bootstrap proportion_Conservative") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistic_Conservative: Sample proportion") + 
+  geom_vline(xintercept = quantile(CON$mean, 0.025), color="red") + geom_vline(xintercept = quantile(CON$mean, 0.975), color="red") 
+
+cat('\n')
+cat("d. According to the histogram, the bootstrap histogram is symmetric and centered around the peak, it suggests that the bootstrap method has produced a reliable estimate of pCon. 
+    Additionally, the narrower range and the non-parametric nature of the bootstrap approach provide a strong justification for selecting the bootstrap techniques 95% CI as the best estimate for the unknown value of pCon.")
